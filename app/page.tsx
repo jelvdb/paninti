@@ -93,7 +93,17 @@ export default function Home() {
         )}
       </div>
 
-      <PhotoUpload photos={photos} onUploaded={setPhotos} />
+      <PhotoUpload
+        photos={photos}
+        onUploaded={(newPhotos, newIds) => {
+          setPhotos(newPhotos);
+          setCollected((prev) => {
+            const copy = { ...prev };
+            for (const id of newIds) copy[id] = true;
+            return copy;
+          });
+        }}
+      />
 
       {selected && (
         <StickerDetailModal
