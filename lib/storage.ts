@@ -4,18 +4,25 @@ import path from "path";
 const STATE_FILE = path.join(process.cwd(), "stickers-state.json");
 const UPLOADS_DIR = path.join(process.cwd(), "public", "uploads");
 
+export interface ExtraSticker {
+  id: string;
+  label: string;
+  count: number;
+}
+
 export interface AppState {
   collected: Record<string, boolean>;
   duplicates: Record<string, number>;
   photos: { filename: string; date: string; note: string }[];
+  extras: ExtraSticker[];
 }
 
 export function readState(): AppState {
   if (!fs.existsSync(STATE_FILE)) {
-    return { collected: {}, duplicates: {}, photos: [] };
+    return { collected: {}, duplicates: {}, photos: [], extras: [] };
   }
   const s = JSON.parse(fs.readFileSync(STATE_FILE, "utf-8"));
-  return { collected: {}, duplicates: {}, photos: [], ...s };
+  return { collected: {}, duplicates: {}, photos: [], extras: [], ...s };
 }
 
 export function writeState(state: AppState): void {

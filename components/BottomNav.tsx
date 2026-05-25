@@ -7,8 +7,9 @@ export default function BottomNav() {
   const path = usePathname();
 
   const tabs = [
-    { href: "/",          label: "Collectie", icon: "📚" },
+    { href: "/",           label: "Collectie", icon: "📚" },
     { href: "/duplicates", label: "Dubbels",   icon: "🔁" },
+    { href: "/extras",     label: "Extra",     icon: "⭐" },
   ];
 
   return (
