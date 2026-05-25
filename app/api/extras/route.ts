@@ -9,7 +9,7 @@ export async function POST(request: NextRequest) {
 
   if (action === "add") {
     if (!label?.trim()) return NextResponse.json({ error: "Missing label" }, { status: 400 });
-    const newEntry = { id: `extra-${Date.now()}`, label: label.trim(), count: 1 };
+    const newEntry = { id: `extra-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`, label: label.trim(), count: 1 };
     state.extras = [...state.extras, newEntry];
   } else if (action === "delta") {
     state.extras = state.extras
