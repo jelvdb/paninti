@@ -1,10 +1,11 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { sections, totalStickers } from "@/data/stickers";
+import { sections, totalStickers, Sticker, Section } from "@/data/stickers";
 import StatsBar from "@/components/StatsBar";
 import CountrySection from "@/components/CountrySection";
 import PhotoUpload from "@/components/PhotoUpload";
+import StickerDetailModal from "@/components/StickerDetailModal";
 
 interface Photo {
   filename: string;
@@ -12,10 +13,16 @@ interface Photo {
   note: string;
 }
 
+interface SelectedSticker {
+  sticker: Sticker;
+  section: Section;
+}
+
 export default function Home() {
   const [collected, setCollected] = useState<Record<string, boolean>>({});
   const [photos, setPhotos] = useState<Photo[]>([]);
   const [search, setSearch] = useState("");
+  const [selected, setSelected] = useState<SelectedSticker | null>(null);
 
   useEffect(() => {
     fetch("/api/state")
@@ -41,8 +48,17 @@ export default function Home() {
     });
   }, [collected]);
 
-  const collectedCount = Object.keys(collected).length;
+  const handleStickerClick = useCallback((sticker: Sticker, section: Section) => {
+    setSelected({ sticker, section });
+  }, []);
 
+  const handleModalToggle = useCallback(() => {
+    if (!selected) return;
+    handleToggle(selected.sticker.id);
+    setSelected(null);
+  }, [selected, handleToggle]);
+
+  const collectedCount = Object.keys(collected).length;
   const filtered = search.trim()
     ? sections.filter((s) => s.name.toLowerCase().includes(search.toLowerCase()))
     : sections;
@@ -51,7 +67,6 @@ export default function Home() {
     <div className="min-h-dvh pb-24">
       <StatsBar total={totalStickers} collected={collectedCount} />
 
-      {/* Search */}
       <div className="px-4 pt-4 pb-2 max-w-lg mx-auto">
         <input
           className="w-full rounded-xl px-4 py-2.5 text-sm"
@@ -62,14 +77,13 @@ export default function Home() {
         />
       </div>
 
-      {/* Country sections */}
       <div className="flex flex-col gap-2 px-4 max-w-lg mx-auto">
         {filtered.map((section) => (
           <CountrySection
             key={section.id}
             section={section}
             collected={collected}
-            onToggle={handleToggle}
+            onStickerClick={handleStickerClick}
           />
         ))}
         {filtered.length === 0 && (
@@ -80,6 +94,16 @@ export default function Home() {
       </div>
 
       <PhotoUpload photos={photos} onUploaded={setPhotos} />
+
+      {selected && (
+        <StickerDetailModal
+          sticker={selected.sticker}
+          section={selected.section}
+          collected={!!collected[selected.sticker.id]}
+          onToggle={handleModalToggle}
+          onClose={() => setSelected(null)}
+        />
+      )}
     </div>
   );
 }

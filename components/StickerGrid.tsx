@@ -5,18 +5,18 @@ import { Sticker } from "@/data/stickers";
 interface StickerGridProps {
   stickers: Sticker[];
   collected: Record<string, boolean>;
-  onToggle: (id: string) => void;
+  onStickerClick: (sticker: Sticker) => void;
 }
 
 const TYPE_STYLE: Record<string, { bg: string; border: string; emoji: string }> = {
-  foil:        { bg: "#2a2010", border: "#e8c84a", emoji: "✨" },
-  player:      { bg: "#0f1a2e", border: "#334d80", emoji: "" },
-  "team-photo":{ bg: "#1a0f2e", border: "#7c3aed", emoji: "📸" },
-  special:     { bg: "#1a1a0f", border: "#ca8a04", emoji: "⭐" },
-  insert:      { bg: "#1a0f0f", border: "#dc2626", emoji: "🔴" },
+  foil:         { bg: "#2a2010", border: "#e8c84a", emoji: "✨" },
+  player:       { bg: "#0f1a2e", border: "#334d80", emoji: "" },
+  "team-photo": { bg: "#1a0f2e", border: "#7c3aed", emoji: "📸" },
+  special:      { bg: "#1a1a0f", border: "#ca8a04", emoji: "⭐" },
+  insert:       { bg: "#1a0f0f", border: "#dc2626", emoji: "🔴" },
 };
 
-export default function StickerGrid({ stickers, collected, onToggle }: StickerGridProps) {
+export default function StickerGrid({ stickers, collected, onStickerClick }: StickerGridProps) {
   return (
     <div className="grid gap-1.5" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(58px, 1fr))" }}>
       {stickers.map((sticker) => {
@@ -32,7 +32,7 @@ export default function StickerGrid({ stickers, collected, onToggle }: StickerGr
               border: `1.5px solid ${isCollected ? "#16a34a" : style.border}`,
               opacity: isCollected ? 1 : 0.65,
             }}
-            onClick={() => onToggle(sticker.id)}
+            onClick={() => onStickerClick(sticker)}
           >
             {isCollected && (
               <div
