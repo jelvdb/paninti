@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Section, Sticker } from "@/data/stickers";
+import { c } from "@/lib/theme";
 import StickerGrid from "./StickerGrid";
 
 interface CountrySectionProps {
@@ -24,7 +25,7 @@ export default function CountrySection({ section, collected, onStickerClick }: C
   return (
     <div
       className="rounded-2xl overflow-hidden"
-      style={{ background: "#1a1a2e", border: done ? "1.5px solid #16a34a" : "1.5px solid #1e2a3a" }}
+      style={{ background: c.surface, border: done ? `1.5px solid ${c.successBright}` : `1.5px solid ${c.border}` }}
     >
       <button
         className="w-full flex items-center gap-3 px-4 py-3"
@@ -33,28 +34,28 @@ export default function CountrySection({ section, collected, onStickerClick }: C
         <span className="leading-none" style={{ fontSize: "3rem" }}>{section.flag}</span>
         <div className="flex-1 text-left">
           <div className="flex items-center gap-2">
-            <span className="font-semibold text-sm">{section.name}</span>
+            <span className="font-semibold text-sm" style={{ color: c.text }}>{section.name}</span>
             {done && (
-              <span className="text-xs px-1.5 py-0.5 rounded-full font-bold" style={{ background: "#14532d", color: "#4ade80" }}>
+              <span className="text-xs px-1.5 py-0.5 rounded-full font-bold" style={{ background: c.greenTint, color: c.greenInk }}>
                 ✓ Compleet
               </span>
             )}
           </div>
           {collectedNumbers && (
-            <p className="leading-none mt-0.5 truncate" style={{ fontSize: 10, color: "#475569" }}>
+            <p className="leading-none mt-0.5 truncate" style={{ fontSize: 10, color: c.textSubtle }}>
               {collectedNumbers}
             </p>
           )}
         </div>
         <div className="text-right min-w-[40px]">
-          <span className="text-sm font-bold" style={{ color: done ? "#4ade80" : "#e8c84a" }}>
+          <span className="text-sm font-bold" style={{ color: done ? c.greenInk : c.purpleInk }}>
             {sectionCollected}/{total}
           </span>
         </div>
         <span
           className="text-sm"
           style={{
-            color: "#475569",
+            color: c.textSubtle,
             display: "inline-block",
             transition: "transform 0.2s",
             transform: open ? "rotate(180deg)" : "none",

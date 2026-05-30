@@ -5,6 +5,7 @@ import { sections, totalStickers, Sticker, Section } from "@/data/stickers";
 import StatsBar from "@/components/StatsBar";
 import CountrySection from "@/components/CountrySection";
 import StickerDetailModal from "@/components/StickerDetailModal";
+import { c } from "@/lib/theme";
 
 interface SelectedSticker {
   sticker: Sticker;
@@ -99,7 +100,7 @@ export default function Home() {
       <div className="px-4 pt-4 pb-2 max-w-lg mx-auto flex flex-col gap-2">
         <input
           className="w-full rounded-xl px-4 py-2.5 text-sm"
-          style={{ background: "#1a1a2e", border: "1.5px solid #1e2a3a", color: "#f1f5f9" }}
+          style={{ background: c.surface, border: `1.5px solid ${c.border}`, color: c.text }}
           placeholder="🔍 Zoek land..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
@@ -111,9 +112,9 @@ export default function Home() {
               onClick={() => setSort(key)}
               className="flex-1 rounded-lg py-1.5 text-xs font-medium transition-colors"
               style={{
-                background: sort === key ? "#2563eb" : "#1a1a2e",
-                border: `1.5px solid ${sort === key ? "#2563eb" : "#1e2a3a"}`,
-                color: sort === key ? "#fff" : "#94a3b8",
+                background: sort === key ? c.primary : c.surface,
+                border: `1.5px solid ${sort === key ? c.primary : c.border}`,
+                color: sort === key ? c.white : c.textMuted,
               }}
             >
               {label}
@@ -141,7 +142,7 @@ export default function Home() {
                     fontSize: 10,
                     width: 16,
                     padding: "2px 0",
-                    color: active ? "#e8c84a" : "#1e2a3a",
+                    color: active ? c.purpleInk : c.borderStrong,
                     cursor: active ? "pointer" : "default",
                   }}
                 >
@@ -163,7 +164,7 @@ export default function Home() {
             </div>
           ))}
           {filtered.length === 0 && (
-            <p className="text-center py-10 text-sm" style={{ color: "#64748b" }}>
+            <p className="text-center py-10 text-sm" style={{ color: c.textSubtle }}>
               Geen landen gevonden voor &ldquo;{search}&rdquo;
             </p>
           )}
