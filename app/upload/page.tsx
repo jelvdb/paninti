@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { requireAuth } from "@/lib/auth";
 import { sections } from "@/data/stickers";
 import type { Sticker, Section } from "@/data/stickers";
+import { c } from "@/lib/theme";
 
 const stickerMap = new Map<string, { sticker: Sticker; section: Section }>();
 for (const section of sections) {
@@ -25,9 +26,9 @@ type ExtraStatus = "include" | "ignore";
 type Step = "idle" | "analyzing" | "review" | "applying";
 
 const STATUS_CFG = {
-  new:       { label: "Nieuw",  emoji: "✨", color: "#4ade80", bg: "#0a2218", border: "#4ade8033" },
-  duplicate: { label: "Dubbel", emoji: "🔁", color: "#fbbf24", bg: "#241a08", border: "#fbbf2433" },
-  ignore:    { label: "Negeer", emoji: "✕",  color: "#475569", bg: "#131a24", border: "#47556933" },
+  new:       { label: "Nieuw",  emoji: "✨", color: c.greenInk,   bg: c.greenTint,    border: c.successBright },
+  duplicate: { label: "Dubbel", emoji: "🔁", color: c.orangeInk,  bg: c.orangeTint,   border: c.orangeInk },
+  ignore:    { label: "Negeer", emoji: "✕",  color: c.textSubtle, bg: c.surfaceMuted, border: c.border },
 };
 const STATUS_CYCLE: Record<StickerStatus, StickerStatus> = { new: "duplicate", duplicate: "ignore", ignore: "new" };
 
@@ -190,10 +191,10 @@ export default function UploadPage() {
   return (
     <div className="min-h-dvh pb-24">
       {/* Header */}
-      <div className="sticky top-11 z-30 px-4 py-4" style={{ background: "#0f0f1a", borderBottom: "1px solid #1e2a3a" }}>
+      <div className="sticky top-11 z-30 px-4 py-4" style={{ background: c.bg, borderBottom: `1px solid ${c.border}` }}>
         <div className="max-w-lg mx-auto">
-          <h1 className="text-lg font-bold">📷 Foto opladen</h1>
-          <p className="text-xs" style={{ color: "#64748b" }}>Herkent nieuwe, dubbele en extra stickers</p>
+          <h1 className="text-lg font-bold" style={{ color: c.text }}>📷 Foto opladen</h1>
+          <p className="text-xs" style={{ color: c.textMuted }}>Herkent nieuwe, dubbele en extra stickers</p>
         </div>
       </div>
 
@@ -202,26 +203,26 @@ export default function UploadPage() {
         <div className="px-4 pt-4 max-w-lg mx-auto flex flex-col gap-3">
           <button
             className="rounded-2xl py-6 flex flex-col items-center gap-2 font-bold text-sm"
-            style={{ background: "#1a1a2e", border: "1.5px solid #1e2a3a" }}
+            style={{ background: c.surface, border: `1.5px solid ${c.border}`, color: c.text }}
             onClick={async () => {
               if (await requireAuth()) cameraRef.current?.click();
             }}
           >
             <span className="text-4xl">📸</span>
             <span>Camera openen</span>
-            <span className="text-xs font-normal" style={{ color: "#64748b" }}>Maak direct een foto</span>
+            <span className="text-xs font-normal" style={{ color: c.textMuted }}>Maak direct een foto</span>
           </button>
 
           <button
             className="rounded-2xl py-6 flex flex-col items-center gap-2 font-bold text-sm"
-            style={{ background: "#1a1a2e", border: "1.5px solid #1e2a3a" }}
+            style={{ background: c.surface, border: `1.5px solid ${c.border}`, color: c.text }}
             onClick={async () => {
               if (await requireAuth()) galleryRef.current?.click();
             }}
           >
             <span className="text-4xl">🖼️</span>
             <span>Galerij kiezen</span>
-            <span className="text-xs font-normal" style={{ color: "#64748b" }}>Kies een bestaande foto</span>
+            <span className="text-xs font-normal" style={{ color: c.textMuted }}>Kies een bestaande foto</span>
           </button>
 
           <input ref={cameraRef} type="file" accept="image/*" capture="environment" className="hidden"
@@ -231,14 +232,14 @@ export default function UploadPage() {
 
           {photos.length > 0 && (
             <div className="mt-2">
-              <h3 className="text-sm font-semibold mb-2" style={{ color: "#64748b" }}>Eerder opgeladen</h3>
+              <h3 className="text-sm font-semibold mb-2" style={{ color: c.textMuted }}>Eerder opgeladen</h3>
               <div className="flex flex-col gap-2">
                 {photos.slice(0, 5).map((p) => (
-                  <div key={p.filename} className="flex items-center gap-3 rounded-xl p-3" style={{ background: "#1a1a2e" }}>
+                  <div key={p.filename} className="flex items-center gap-3 rounded-xl p-3" style={{ background: c.surface, border: `1px solid ${c.border}` }}>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={`/uploads/${p.filename}`} alt="" className="w-12 h-12 object-cover rounded-lg" />
                     <div className="flex-1 min-w-0">
-                      <div className="text-xs" style={{ color: "#94a3b8" }}>
+                      <div className="text-xs" style={{ color: c.textMuted }}>
                         {new Date(p.date).toLocaleDateString("nl-BE", { day: "numeric", month: "short", year: "numeric" })}
                       </div>
                       {p.note && <div className="text-sm truncate">{p.note}</div>}
@@ -257,12 +258,12 @@ export default function UploadPage() {
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={preview} alt="" className="w-full rounded-2xl object-contain" style={{ maxHeight: 320 }} />
           <div className="flex gap-3">
-            <button className="flex-1 rounded-2xl py-3 font-bold text-sm" style={{ background: "#1e2a3a", color: "#94a3b8" }} onClick={reset}>
+            <button className="flex-1 rounded-2xl py-3 font-bold text-sm" style={{ background: c.surfaceMuted, color: c.textMuted }} onClick={reset}>
               Andere foto
             </button>
             <button
               className="flex-1 rounded-2xl py-3 font-bold text-sm"
-              style={{ background: "linear-gradient(135deg, #e8c84a, #f97316)", color: "#0f0f1a" }}
+              style={{ background: c.primary, color: c.white }}
               onClick={() => handleAnalyze(file)}
             >
               Analyseren
@@ -273,18 +274,18 @@ export default function UploadPage() {
 
       {/* ── Progress screen ── */}
       {step === "analyzing" && preview && (
-        <div className="fixed inset-0 z-50 flex flex-col items-center justify-center gap-10 px-8" style={{ background: "#0f0f1a" }}>
+        <div className="fixed inset-0 z-50 flex flex-col items-center justify-center gap-10 px-8" style={{ background: c.bg }}>
           <div className="relative">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={preview} alt="" className="rounded-3xl object-cover" style={{ width: 220, height: 220, opacity: 0.7 }} />
+            <img src={preview} alt="" className="rounded-3xl object-cover" style={{ width: 220, height: 220, opacity: 0.9 }} />
             <div className="absolute inset-0 rounded-3xl overflow-hidden">
               <div style={{
                 position: "absolute", left: 0, right: 0, height: 2,
-                background: "linear-gradient(90deg, transparent, #e8c84a, transparent)",
+                background: `linear-gradient(90deg, transparent, ${c.primary}, transparent)`,
                 animation: "scanline 1.8s ease-in-out infinite",
               }} />
             </div>
-            <div className="absolute inset-0 rounded-3xl" style={{ boxShadow: "0 0 40px #e8c84a44" }} />
+            <div className="absolute inset-0 rounded-3xl" style={{ boxShadow: `0 0 40px ${c.primary}55` }} />
           </div>
 
           <div className="flex flex-col gap-3 w-full max-w-xs">
@@ -294,10 +295,10 @@ export default function UploadPage() {
               return (
                 <div key={i} className="flex items-center gap-3">
                   <div className="w-8 h-8 rounded-full flex items-center justify-center text-sm shrink-0"
-                    style={{ background: done ? "#16a34a" : active ? "#1e3a5f" : "#1a1a2e", border: `2px solid ${done ? "#16a34a" : active ? "#3b82f6" : "#1e2a3a"}` }}>
+                    style={{ background: done ? c.success : active ? c.purpleTint : c.surfaceMuted, border: `2px solid ${done ? c.success : active ? c.primary : c.border}`, color: done ? c.white : c.text }}>
                     {done ? "✓" : active ? <span style={{ animation: "spin 1s linear infinite", display: "inline-block" }}>⟳</span> : s.icon}
                   </div>
-                  <span className="text-sm font-medium" style={{ color: done ? "#4ade80" : active ? "#f1f5f9" : "#334155" }}>
+                  <span className="text-sm font-medium" style={{ color: done ? c.greenInk : active ? c.text : c.textSubtle }}>
                     {s.label}{active && <span style={{ animation: "blink 1s step-end infinite" }}>...</span>}
                   </span>
                 </div>
@@ -321,20 +322,20 @@ export default function UploadPage() {
 
           {/* Summary */}
           <div className="flex gap-2 flex-wrap">
-            <span className="rounded-full px-3 py-1 text-xs font-bold" style={{ background: "#0a2218", color: "#4ade80" }}>
+            <span className="rounded-full px-3 py-1 text-xs font-bold" style={{ background: c.greenTint, color: c.greenInk }}>
               ✨ {allIds.filter((id) => statuses[id] === "new").length} nieuw
             </span>
-            <span className="rounded-full px-3 py-1 text-xs font-bold" style={{ background: "#241a08", color: "#fbbf24" }}>
+            <span className="rounded-full px-3 py-1 text-xs font-bold" style={{ background: c.orangeTint, color: c.orangeInk }}>
               🔁 {allIds.filter((id) => statuses[id] === "duplicate").length} dubbel
             </span>
             {result.extraLabels.length > 0 && (
-              <span className="rounded-full px-3 py-1 text-xs font-bold" style={{ background: "#1a1030", color: "#a78bfa" }}>
+              <span className="rounded-full px-3 py-1 text-xs font-bold" style={{ background: c.purpleTint, color: c.purpleInk }}>
                 ⭐ {result.extraLabels.filter((_, i) => extraStatuses[i] === "include").length} extra
               </span>
             )}
           </div>
 
-          <p className="text-xs" style={{ color: "#475569" }}>Tik op de badge om te corrigeren</p>
+          <p className="text-xs" style={{ color: c.textSubtle }}>Tik op de badge om te corrigeren</p>
 
           {/* Regular stickers */}
           {allIds.map((id) => {
@@ -349,12 +350,12 @@ export default function UploadPage() {
                 <span className="text-xl leading-none shrink-0">{section.flag}</span>
                 <div className="flex-1 min-w-0">
                   <span className="font-mono text-xs font-bold mr-2" style={{ color: cfg.color }}>{sticker.code}</span>
-                  <span className="text-sm" style={{ color: "#e2e8f0" }}>{sticker.label}</span>
+                  <span className="text-sm" style={{ color: c.text }}>{sticker.label}</span>
                 </div>
                 <button
                   onClick={() => setStatuses((prev) => ({ ...prev, [id]: STATUS_CYCLE[prev[id] ?? "new"] }))}
                   className="flex items-center gap-1 rounded-full px-3 py-1 text-xs font-bold shrink-0"
-                  style={{ background: `${cfg.color}22`, color: cfg.color }}
+                  style={{ background: cfg.bg, color: cfg.color }}
                   disabled={step === "applying"}
                 >
                   {cfg.emoji} {cfg.label}
@@ -366,18 +367,18 @@ export default function UploadPage() {
           {/* Extra stickers */}
           {result.extraLabels.length > 0 && (
             <div>
-              <p className="text-xs font-semibold mb-2" style={{ color: "#a78bfa" }}>⭐ Extra stickers</p>
+              <p className="text-xs font-semibold mb-2" style={{ color: c.purpleInk }}>⭐ Extra stickers</p>
               {result.extraLabels.map((label, i) => {
                 const included = extraStatuses[i] === "include";
                 return (
                   <div key={i} className="flex items-center gap-3 rounded-2xl px-4 py-3 mb-2"
-                    style={{ background: included ? "#1a1030" : "#131a24", border: `1.5px solid ${included ? "#a78bfa33" : "#47556933"}` }}>
+                    style={{ background: included ? c.purpleTint : c.surfaceMuted, border: `1.5px solid ${included ? c.purpleInk : c.border}` }}>
                     <span className="text-xl leading-none">⭐</span>
-                    <span className="flex-1 text-sm" style={{ color: included ? "#e2e8f0" : "#475569" }}>{label}</span>
+                    <span className="flex-1 text-sm" style={{ color: included ? c.text : c.textSubtle }}>{label}</span>
                     <button
                       onClick={() => setExtraStatuses((prev) => ({ ...prev, [i]: prev[i] === "include" ? "ignore" : "include" }))}
                       className="rounded-full px-3 py-1 text-xs font-bold shrink-0"
-                      style={{ background: included ? "#a78bfa22" : "#47556922", color: included ? "#a78bfa" : "#475569" }}
+                      style={{ background: included ? c.surface : c.surfaceAccent, color: included ? c.purpleInk : c.textSubtle }}
                       disabled={step === "applying"}
                     >
                       {included ? "✓ Opslaan" : "✕ Negeer"}
@@ -390,31 +391,31 @@ export default function UploadPage() {
 
           {/* Unknown codes */}
           {result.unknownCodes.length > 0 && (
-            <div className="rounded-2xl p-4" style={{ background: "#1a1218", border: "1.5px solid #f8717133" }}>
-              <p className="text-sm font-semibold mb-1" style={{ color: "#f87171" }}>⚠️ Niet herkend ({result.unknownCodes.length})</p>
-              <p className="text-xs" style={{ color: "#64748b" }}>{result.unknownCodes.join("  ·  ")}</p>
+            <div className="rounded-2xl p-4" style={{ background: c.redTint, border: `1.5px solid ${c.redInk}` }}>
+              <p className="text-sm font-semibold mb-1" style={{ color: c.redInk }}>⚠️ Niet herkend ({result.unknownCodes.length})</p>
+              <p className="text-xs" style={{ color: c.textMuted }}>{result.unknownCodes.join("  ·  ")}</p>
             </div>
           )}
 
           {allIds.length === 0 && result.extraLabels.length === 0 && (
-            <div className="text-center py-8" style={{ color: "#64748b" }}>
+            <div className="text-center py-8" style={{ color: c.textMuted }}>
               <p className="text-4xl mb-3">🤔</p>
-              <p className="font-semibold">Geen stickers herkend</p>
+              <p className="font-semibold" style={{ color: c.text }}>Geen stickers herkend</p>
               <p className="text-sm mt-1">Probeer een scherpere foto, codekant omhoog</p>
             </div>
           )}
 
           {/* Actions */}
           <div className="flex gap-3 mt-2">
-            <button className="flex-1 rounded-2xl py-4 font-bold text-sm" style={{ background: "#1e2a3a", color: "#94a3b8" }}
+            <button className="flex-1 rounded-2xl py-4 font-bold text-sm" style={{ background: c.surfaceMuted, color: c.textMuted }}
               onClick={reset} disabled={step === "applying"}>
               Annuleren
             </button>
             <button
               className="flex-1 rounded-2xl py-4 font-bold text-sm disabled:opacity-40"
               style={{
-                background: step === "applying" || activeCount === 0 ? "#334155" : "linear-gradient(135deg, #e8c84a, #f97316)",
-                color: "#0f0f1a",
+                background: step === "applying" || activeCount === 0 ? c.borderStrong : c.primary,
+                color: c.white,
               }}
               onClick={handleApprove}
               disabled={step === "applying" || activeCount === 0}

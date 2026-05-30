@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import PhotoReviewModal, { type AnalysisResult, type CorrectedResult } from "./PhotoReviewModal";
 import { requireAuth } from "@/lib/auth";
+import { c } from "@/lib/theme";
 
 interface Photo {
   filename: string;
@@ -112,7 +113,7 @@ export default function PhotoUpload({ photos, onUploaded }: Props) {
       {/* FAB */}
       <button
         className="fixed bottom-20 right-4 z-40 flex items-center gap-2 px-4 py-3 rounded-full font-bold shadow-lg text-sm"
-        style={{ background: "linear-gradient(135deg, #e8c84a, #f97316)", color: "#0f0f1a" }}
+        style={{ background: c.primary, color: c.white }}
         onClick={async () => {
           if (await requireAuth()) setStep("open");
         }}
@@ -122,17 +123,17 @@ export default function PhotoUpload({ photos, onUploaded }: Props) {
 
       {/* ── Upload sheet ── */}
       {step === "open" && (
-        <div className="fixed inset-0 z-50 flex flex-col" style={{ background: "rgba(0,0,0,0.85)" }}>
+        <div className="fixed inset-0 z-50 flex flex-col" style={{ background: c.bg }}>
           <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-4 max-w-lg mx-auto w-full">
             <div className="flex items-center justify-between pt-2">
-              <h2 className="text-lg font-bold">📷 Stickers opladen</h2>
-              <button className="text-2xl" style={{ color: "#94a3b8" }} onClick={reset}>✕</button>
+              <h2 className="text-lg font-bold" style={{ color: c.text }}>📷 Stickers opladen</h2>
+              <button className="text-2xl" style={{ color: c.textMuted }} onClick={reset}>✕</button>
             </div>
 
             {/* Drop zone */}
             <button
               className="rounded-2xl border-2 border-dashed flex flex-col items-center justify-center gap-2 py-8"
-              style={{ borderColor: "#334d80", background: "#1a1a2e" }}
+              style={{ borderColor: c.borderStrong, background: c.surface }}
               onClick={() => inputRef.current?.click()}
             >
               {preview ? (
@@ -141,8 +142,8 @@ export default function PhotoUpload({ photos, onUploaded }: Props) {
               ) : (
                 <>
                   <span className="text-4xl">📸</span>
-                  <span className="text-sm" style={{ color: "#94a3b8" }}>Tik om foto te kiezen</span>
-                  <span className="text-xs" style={{ color: "#475569" }}>Leg stickers naast elkaar, codekant boven</span>
+                  <span className="text-sm" style={{ color: c.textMuted }}>Tik om foto te kiezen</span>
+                  <span className="text-xs" style={{ color: c.textSubtle }}>Leg stickers naast elkaar, codekant boven</span>
                 </>
               )}
             </button>
@@ -158,7 +159,7 @@ export default function PhotoUpload({ photos, onUploaded }: Props) {
             <button
               disabled={!file}
               className="rounded-2xl py-4 font-bold text-sm disabled:opacity-40"
-              style={{ background: "linear-gradient(135deg, #e8c84a, #f97316)", color: "#0f0f1a" }}
+              style={{ background: c.primary, color: c.white }}
               onClick={handleAnalyze}
             >
               Analyseren
@@ -167,14 +168,14 @@ export default function PhotoUpload({ photos, onUploaded }: Props) {
             {/* History */}
             {photos.length > 0 && (
               <div>
-                <h3 className="text-sm font-semibold mb-2" style={{ color: "#94a3b8" }}>Eerder opgeladen</h3>
+                <h3 className="text-sm font-semibold mb-2" style={{ color: c.textMuted }}>Eerder opgeladen</h3>
                 <div className="flex flex-col gap-2">
                   {photos.slice(0, 5).map((p) => (
-                    <div key={p.filename} className="flex items-center gap-3 rounded-xl p-3" style={{ background: "#1a1a2e" }}>
+                    <div key={p.filename} className="flex items-center gap-3 rounded-xl p-3" style={{ background: c.surface, border: `1px solid ${c.border}` }}>
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img src={`/uploads/${p.filename}`} alt="" className="w-12 h-12 object-cover rounded-lg" />
                       <div className="flex-1 min-w-0">
-                        <div className="text-xs" style={{ color: "#94a3b8" }}>
+                        <div className="text-xs" style={{ color: c.textMuted }}>
                           {new Date(p.date).toLocaleDateString("nl-BE", { day: "numeric", month: "short", year: "numeric" })}
                         </div>
                         {p.note && <div className="text-sm truncate">{p.note}</div>}
@@ -190,7 +191,7 @@ export default function PhotoUpload({ photos, onUploaded }: Props) {
 
       {/* ── Progress screen ── */}
       {step === "analyzing" && preview && (
-        <div className="fixed inset-0 z-50 flex flex-col items-center justify-center gap-10 px-8" style={{ background: "#0f0f1a" }}>
+        <div className="fixed inset-0 z-50 flex flex-col items-center justify-center gap-10 px-8" style={{ background: c.bg }}>
           {/* Animated photo */}
           <div className="relative">
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -198,7 +199,7 @@ export default function PhotoUpload({ photos, onUploaded }: Props) {
               src={preview}
               alt="foto"
               className="rounded-3xl object-cover"
-              style={{ width: 220, height: 220, opacity: 0.75 }}
+              style={{ width: 220, height: 220, opacity: 0.9 }}
             />
             {/* Scan line */}
             <div
@@ -211,7 +212,7 @@ export default function PhotoUpload({ photos, onUploaded }: Props) {
                   left: 0,
                   right: 0,
                   height: 2,
-                  background: "linear-gradient(90deg, transparent, #e8c84a, transparent)",
+                  background: `linear-gradient(90deg, transparent, ${c.primary}, transparent)`,
                   animation: "scanline 1.8s ease-in-out infinite",
                 }}
               />
@@ -220,7 +221,7 @@ export default function PhotoUpload({ photos, onUploaded }: Props) {
             <div
               className="absolute inset-0 rounded-3xl"
               style={{
-                boxShadow: "0 0 40px #e8c84a44",
+                boxShadow: `0 0 40px ${c.primary}55`,
                 animation: "pulse 2s ease-in-out infinite",
               }}
             />
@@ -236,8 +237,9 @@ export default function PhotoUpload({ photos, onUploaded }: Props) {
                   <div
                     className="w-8 h-8 rounded-full flex items-center justify-center text-sm shrink-0 transition-all duration-300"
                     style={{
-                      background: done ? "#16a34a" : active ? "#1e3a5f" : "#1a1a2e",
-                      border: `2px solid ${done ? "#16a34a" : active ? "#3b82f6" : "#1e2a3a"}`,
+                      background: done ? c.success : active ? c.purpleTint : c.surfaceMuted,
+                      border: `2px solid ${done ? c.success : active ? c.primary : c.border}`,
+                      color: done ? c.white : c.text,
                     }}
                   >
                     {done ? "✓" : active ? (
@@ -246,7 +248,7 @@ export default function PhotoUpload({ photos, onUploaded }: Props) {
                   </div>
                   <span
                     className="text-sm font-medium transition-colors duration-300"
-                    style={{ color: done ? "#4ade80" : active ? "#f1f5f9" : "#334155" }}
+                    style={{ color: done ? c.greenInk : active ? c.text : c.textSubtle }}
                   >
                     {s.label}
                     {active && <span style={{ animation: "blink 1s step-end infinite" }}>...</span>}
